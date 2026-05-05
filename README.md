@@ -63,7 +63,7 @@ Lectura rápida del modelo:
 1. Entra en la carpeta del proyecto:
 
 ```bash
-cd docs/section1/u09/practica/otrosRecursos/ejemplos/jdbc-h2-kotlin
+cd .
 ```
 
 2. Lista las tareas disponibles:
