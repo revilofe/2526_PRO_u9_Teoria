@@ -4,8 +4,18 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `ConexionValida`.
+ *
+ * Es un `object` porque solo actúa como lanzador del ejemplo. Kotlin lo compila como singleton,
+ * evitando crear una clase instanciable sin estado.
  */
 object ConexionValidaSimple {
+    /**
+     * Punto de entrada usado por Gradle/JVM para ejecutar el ejemplo.
+     *
+     * `@JvmStatic` fuerza la generación de un método `main` estático dentro del bytecode. Sin
+     * esa anotación, el `main` viviría como método de la instancia singleton y algunas tareas de
+     * ejecución Java no lo localizarían como entrada clásica.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -20,8 +30,13 @@ object ConexionValidaSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `ConexionValida`.
+ *
+ * Es un singleton lanzable: no guarda estado propio y solo coordina los objetos del ejemplo.
  */
 object ConexionValidaCompleto {
+    /**
+     * Punto de entrada estático generado para que la herramienta de ejecución pueda invocarlo.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()

@@ -5,8 +5,15 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `InsertBasico`.
+ *
+ * Se usa `object` como lanzador único y sin estado.
  */
 object InsertBasicoSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` es necesario para exponer un `main` estático compatible con la ejecución JVM.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -33,8 +40,13 @@ object InsertBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `InsertBasico`.
+ *
+ * El `object` solo compone servicio y repositorio para la demostración.
  */
 object InsertBasicoCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -87,11 +99,15 @@ private class ProductCreationService(
      * @return vista completa del producto ya insertado.
      */
     fun create(newProduct: NewProduct): ProductView {
+        // Estas validaciones pertenecen al servicio porque expresan reglas de negocio antes de
+        // llegar a la base de datos. Las restricciones SQL siguen siendo una segunda barrera.
         require(newProduct.nombre.isNotBlank()) { "El nombre no puede estar vacío." }
         require(newProduct.precio >= BigDecimal.ZERO) { "El precio no puede ser negativo." }
         require(newProduct.stock >= 0) { "El stock no puede ser negativo." }
 
         repository.insert(newProduct)
+        // Se vuelve a consultar para devolver la misma vista que usaría una lectura normal, ya con
+        // la categoría resuelta mediante JOIN.
         return repository.findById(newProduct.id) ?: error("No se ha encontrado el producto insertado.")
     }
 }
@@ -117,6 +133,7 @@ private class ProductWriterRepository(
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
+                // El orden de los `setXxx` debe coincidir con el orden de los `?` de la sentencia.
                 statement.setLong(1, newProduct.id)
                 statement.setString(2, newProduct.nombre)
                 statement.setBigDecimal(3, newProduct.precio)

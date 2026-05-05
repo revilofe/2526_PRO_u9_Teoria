@@ -5,8 +5,15 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `PreparedSelectParametro`.
+ *
+ * Es un `object` porque representa un lanzador singleton, no un modelo con identidad propia.
  */
 object PreparedSelectParametroSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` hace visible este método como `main` estático para la JVM.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -21,6 +28,8 @@ object PreparedSelectParametroSimple {
             """.trimIndent()
 
             connection.prepareStatement(sql).use { statement ->
+                // Los `?` son marcadores de posición. El driver envía el valor separado del SQL,
+                // evitando concatenaciones y reduciendo el riesgo de inyección SQL.
                 statement.setBigDecimal(1, BigDecimal("100.00"))
 
                 statement.executeQuery().use { resultSet ->
@@ -35,8 +44,13 @@ object PreparedSelectParametroSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `PreparedSelectParametro`.
+ *
+ * El singleton contiene solo la composición de objetos necesaria para ejecutar el ejemplo.
  */
 object PreparedSelectParametroCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -95,10 +109,12 @@ private class PreparedProductSearchRepository(
             JOIN categorias c ON c.id = p.categoria_id
             WHERE p.precio <= ?
             ORDER BY p.precio
-        """.trimIndent()
+            """.trimIndent()
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
+                // JDBC numera los parámetros desde 1, no desde 0. Es una convención heredada de
+                // la API Java y conviene recordarla al leer `setXxx`.
                 statement.setBigDecimal(1, criteria.maxPrice)
 
                 statement.executeQuery().use { resultSet ->

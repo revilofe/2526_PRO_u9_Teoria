@@ -4,8 +4,16 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `MapeoFilaAObjeto`.
+ *
+ * El `object` funciona como singleton lanzador; no representa un producto ni otro concepto del
+ * dominio.
  */
 object MapeoFilaAObjetoSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` fuerza la firma estática necesaria para ejecutarlo desde tareas Java.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -24,6 +32,9 @@ object MapeoFilaAObjetoSimple {
 
                 statement.executeQuery().use { resultSet ->
                     if (resultSet.next()) {
+                        // El `ResultSet` es una estructura tabular y mutable. Convertir la fila a
+                        // un objeto Kotlin evita que el resto del programa dependa de nombres de
+                        // columnas o de la API JDBC.
                         val product = ProductView(
                             id = resultSet.getLong("id"),
                             nombre = resultSet.getString("nombre"),
@@ -41,8 +52,13 @@ object MapeoFilaAObjetoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `MapeoFilaAObjeto`.
+ *
+ * Se usa `object` para contener el `main` y la composición del ejemplo.
  */
 object MapeoFilaAObjetoCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -57,6 +73,9 @@ object MapeoFilaAObjetoCompleto {
 
 /**
  * Convierte la fila actual de un `ResultSet` en un `ProductView`.
+ *
+ * Separar el mapeo en una clase pequeña aplica responsabilidad única: el repositorio decide qué
+ * consultar y el mapper decide cómo traducir una fila SQL a un objeto del programa.
  */
 private class ProductRowMapper {
     /**

@@ -4,8 +4,17 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `SelectBasico`.
+ *
+ * Se declara como `object` para representar un único lanzador sin estado. Es una forma cómoda
+ * de agrupar un `main` didáctico sin diseñar una clase con constructor.
  */
 object SelectBasicoSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` adapta el `main` de Kotlin al formato estático que espera la JVM cuando se
+     * lanza una clase desde Gradle o desde un IDE.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -31,8 +40,13 @@ object SelectBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `SelectBasico`.
+ *
+ * El `object` funciona como singleton lanzador y no como entidad del dominio.
  */
 object SelectBasicoCompleto {
+    /**
+     * Punto de entrada estático usado para ejecutar la versión con repositorio.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()

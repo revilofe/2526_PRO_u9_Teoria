@@ -4,8 +4,15 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `DeleteBasico`.
+ *
+ * Se declara como `object` porque es un lanzador singleton sin estado propio.
  */
 object DeleteBasicoSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` genera el `main` estático que la JVM sabe invocar directamente.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -36,8 +43,13 @@ object DeleteBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `DeleteBasico`.
+ *
+ * El `object` solo coordina la ejecución de servicio y repositorio.
  */
 object DeleteBasicoCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -73,6 +85,8 @@ private class ProductDeletionService(
      */
     fun delete(productId: Long) {
         val deletedRows = repository.deleteById(productId)
+        // En un borrado por clave primaria esperamos exactamente una fila. Cualquier otro valor
+        // revela que el identificador no existía o que la consulta no era suficientemente precisa.
         require(deletedRows == 1) { "No existe el producto con id $productId." }
     }
 
@@ -95,6 +109,9 @@ private class ProductDeletionRepository(
 ) {
     /**
      * Inserta un producto sin referencias para demostrar un borrado limpio.
+     *
+     * No se borra un producto semilla porque algunos tienen relaciones con pedidos. Así se evita
+     * mezclar el objetivo del ejemplo con errores de integridad referencial.
      */
     fun insertDisposableProduct() {
         val sql = """

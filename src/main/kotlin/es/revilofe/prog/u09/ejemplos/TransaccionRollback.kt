@@ -5,14 +5,23 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `TransaccionRollback`.
+ *
+ * Se declara como `object` porque solo contiene el lanzador de una demo repetible.
  */
 object TransaccionRollbackSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` adapta la función `main` de Kotlin al punto de entrada estático de Java.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
         printExampleTitle("TransaccionRollback_simple")
 
         DemoDatabase.newConnection().use { connection ->
+            // Sin esta línea, cada sentencia haría commit automáticamente y el rollback no podría
+            // deshacer el INSERT ya ejecutado.
             connection.autoCommit = false
 
             try {
@@ -30,6 +39,7 @@ object TransaccionRollbackSimple {
                 connection.rollback()
                 println("Se ha hecho rollback: ${exception.message}")
             } finally {
+                // Es buena práctica restaurar la conexión aunque el ejemplo use una conexión nueva.
                 connection.autoCommit = true
             }
         }
@@ -38,8 +48,13 @@ object TransaccionRollbackSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `TransaccionRollback`.
+ *
+ * El singleton no modela negocio; solo coordina la ejecución del caso completo.
  */
 object TransaccionRollbackCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -81,6 +96,8 @@ private class SafeSalesService(
      */
     fun tryOperationWithRollback() {
         dataSource.connection.use { connection ->
+            // El rollback solo afecta a las operaciones hechas en esta conexión desde que se
+            // desactivó `autoCommit`.
             connection.autoCommit = false
 
             try {
@@ -98,6 +115,7 @@ private class SafeSalesService(
                 connection.rollback()
                 println("Rollback ejecutado: ${exception.message}")
             } finally {
+                // Si esta conexión viniera de un pool, se devolvería limpia para el siguiente uso.
                 connection.autoCommit = true
             }
         }

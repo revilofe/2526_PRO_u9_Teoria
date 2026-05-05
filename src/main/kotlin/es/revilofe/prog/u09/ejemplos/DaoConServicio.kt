@@ -4,8 +4,15 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `DaoConServicio`.
+ *
+ * Se usa `object` como singleton lanzable porque no hay estado que instanciar.
  */
 object DaoConServicioSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` expone el método como `main` estático para el lanzador JVM.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -20,8 +27,13 @@ object DaoConServicioSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `DaoConServicio`.
+ *
+ * El singleton contiene la composición de factoría, DAO y servicio.
  */
 object DaoConServicioCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -35,6 +47,9 @@ object DaoConServicioCompleto {
 
 /**
  * Contrato de factoría de DAO para desacoplar la construcción.
+ *
+ * La factoría muestra un patrón de creación: quien necesita un DAO no tiene por qué conocer la
+ * clase concreta ni cómo se le pasa el `DataSource`.
  */
 private interface CustomerDaoFactory {
     /**
@@ -99,6 +114,9 @@ private class JdbcCustomerCatalogDao(
 
 /**
  * Servicio de aplicación que depende del contrato DAO y no de JDBC.
+ *
+ * Esta dependencia por interfaz permite cambiar la persistencia sin tocar el caso de uso, una
+ * aplicación directa de inversión de dependencias y del principio abierto/cerrado.
  *
  * @property customerDao acceso a datos inyectado por constructor.
  */

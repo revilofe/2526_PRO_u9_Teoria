@@ -5,8 +5,15 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `GestionSQLException`.
+ *
+ * El `object` es un singleton lanzable para agrupar el `main` del ejemplo simple.
  */
 object GestionSQLExceptionSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` evita que el `main` quede solo como método de la instancia singleton Kotlin.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -32,8 +39,13 @@ object GestionSQLExceptionSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `GestionSQLException`.
+ *
+ * El singleton permite ejecutar la demo sin crear una clase auxiliar instanciable.
  */
 object GestionSQLExceptionCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -51,6 +63,9 @@ object GestionSQLExceptionCompleto {
 
 /**
  * Señala un error de persistencia traducido a un lenguaje más cercano al dominio.
+ *
+ * Mantiene la excepción original como `cause` para no perder información técnica durante el
+ * diagnóstico, pero expone un mensaje que entiende la capa de aplicación.
  */
 private class DomainPersistenceException(message: String, cause: Throwable) : RuntimeException(message, cause)
 
@@ -73,6 +88,8 @@ private class CustomerRegistrationService(
         try {
             repository.insert(customer)
         } catch (exception: SQLException) {
+            // La capa de servicio traduce un detalle técnico de JDBC a un mensaje del dominio.
+            // Así el resto de la aplicación no queda acoplado a códigos SQLState.
             throw DomainPersistenceException(
                 message = if (exception.sqlState == "23505") {
                     "Ya existe un cliente con ese correo electrónico."

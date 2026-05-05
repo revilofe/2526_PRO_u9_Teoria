@@ -4,8 +4,16 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `DaoBasico`.
+ *
+ * Es un `object` porque solo contiene un `main` de demostración y no necesita instancias.
  */
 object DaoBasicoSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` genera una función `main` estática para que Gradle pueda lanzarla como clase
+     * Java convencional.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -18,8 +26,13 @@ object DaoBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `DaoBasico`.
+ *
+ * El singleton compone DAO y servicio para mostrar la separación de capas.
  */
 object DaoBasicoCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -33,6 +46,10 @@ object DaoBasicoCompleto {
 
 /**
  * Define el contrato mínimo de acceso a datos para clientes.
+ *
+ * El resto del código depende de esta interfaz y no de la implementación JDBC. Es una versión
+ * pequeña del principio de inversión de dependencias: los casos de uso conocen contratos, no
+ * detalles técnicos.
  */
 private interface BasicCustomerDao {
     /**
@@ -45,6 +62,9 @@ private interface BasicCustomerDao {
 
 /**
  * Implementación JDBC del DAO de clientes.
+ *
+ * El patrón DAO concentra el SQL en una clase específica. Así el servicio no mezcla reglas de
+ * aplicación con detalles como `PreparedStatement`, columnas o cierre de recursos.
  *
  * @property dataSource origen de datos JDBC.
  */
@@ -74,6 +94,9 @@ private class JdbcBasicCustomerDao(
 
 /**
  * Servicio que consulta clientes sin depender de JDBC directamente.
+ *
+ * La clase existe aunque el caso sea simple para mostrar separación de responsabilidades: el DAO
+ * sabe hablar con la base de datos y el servicio representa el caso de uso.
  *
  * @property customerDao contrato DAO usado por la capa de aplicación.
  */

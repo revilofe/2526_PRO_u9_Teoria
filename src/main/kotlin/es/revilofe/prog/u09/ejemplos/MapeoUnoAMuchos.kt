@@ -5,8 +5,15 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `MapeoUnoAMuchos`.
+ *
+ * Es un `object` porque solo contiene el lanzador del caso simple.
  */
 object MapeoUnoAMuchosSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` expone esta función con la forma estática que espera la JVM.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -26,6 +33,9 @@ object MapeoUnoAMuchosSimple {
 
                 statement.executeQuery().use { resultSet ->
                     while (resultSet.next()) {
+                        // En una relación uno a muchos, una consulta con JOIN repite los datos del
+                        // cliente en cada fila. La versión simple imprime filas; la completa
+                        // reconstruye un objeto con una lista de pedidos.
                         println(
                             "${resultSet.getString("nombre")} -> " +
                                 "pedido ${resultSet.getLong("pedido_id")} -> " +
@@ -40,8 +50,13 @@ object MapeoUnoAMuchosSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `MapeoUnoAMuchos`.
+ *
+ * El singleton solo arranca la demo y no conserva estado entre ejecuciones.
  */
 object MapeoUnoAMuchosCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -85,6 +100,8 @@ private class CustomerOrdersRepository(
 
                     while (resultSet.next()) {
                         if (customer == null) {
+                            // Los datos del cliente aparecen repetidos en todas las filas del JOIN.
+                            // Lo creamos una sola vez y luego acumulamos los pedidos.
                             customer = Customer(
                                 id = resultSet.getLong("cliente_id"),
                                 nombre = resultSet.getString("nombre"),
@@ -94,6 +111,8 @@ private class CustomerOrdersRepository(
 
                         val orderId = resultSet.getLong("pedido_id")
                         if (!resultSet.wasNull()) {
+                            // Con `LEFT JOIN` puede no haber pedido. Tras leer un Long, JDBC devuelve
+                            // 0 si la columna era NULL, por eso se comprueba `wasNull()`.
                             orders += OrderSummary(
                                 id = orderId,
                                 fecha = resultSet.getDate("fecha").toLocalDate(),

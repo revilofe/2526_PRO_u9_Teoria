@@ -4,8 +4,15 @@ import javax.sql.DataSource
 
 /**
  * Ejecuta la versión simple del ejemplo `UpdateBasico`.
+ *
+ * El `object` se usa como singleton lanzable para no crear objetos sin estado real.
  */
 object UpdateBasicoSimple {
+    /**
+     * Punto de entrada del ejemplo.
+     *
+     * `@JvmStatic` adapta la función a la forma que esperan las herramientas Java.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -25,8 +32,13 @@ object UpdateBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `UpdateBasico`.
+ *
+ * El singleton agrupa únicamente la ejecución de la demo.
  */
 object UpdateBasicoCompleto {
+    /**
+     * Punto de entrada estático de la versión completa.
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         DemoDatabase.reset()
@@ -58,6 +70,8 @@ private class StockUpdateService(
         require(newStock >= 0) { "El stock no puede ser negativo." }
 
         val updatedRows = repository.updateStock(productId, newStock)
+        // `executeUpdate` devuelve cuántas filas cambian. Comprobarlo convierte un fallo silencioso
+        // de SQL en un error claro del caso de uso.
         require(updatedRows == 1) { "No existe el producto con id $productId." }
 
         return repository.findById(productId) ?: error("No se ha encontrado el producto tras actualizarlo.")
@@ -84,6 +98,7 @@ private class ProductStockRepository(
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
+                // Primero se asignan los nuevos valores y después la clave del `WHERE`.
                 statement.setInt(1, newStock)
                 statement.setLong(2, productId)
                 return statement.executeUpdate()

@@ -67,6 +67,11 @@ data class CustomerWithOrders(
 
 /**
  * Centraliza la creación y recreación de la base de datos H2 usada por todos los ejemplos.
+ *
+ * Se declara como `object` porque no necesitamos varias instancias de esta clase auxiliar:
+ * Kotlin genera un singleton y todos los ejemplos comparten el mismo punto de entrada a la
+ * configuasociados con las taskración. En una aplicación real esta responsabilidad suele vivir en la configuración
+ * del framework o en un contenedor de dependencias.
  */
 object DemoDatabase {
     private val databaseFileBase: Path =
@@ -74,6 +79,10 @@ object DemoDatabase {
 
     /**
      * URL JDBC común para todos los ejemplos.
+     *
+     * `MODE=PostgreSQL` hace que H2 acepte una sintaxis más parecida a PostgreSQL. Es útil en
+     * clase porque permite practicar con una base de datos ligera sin alejarse demasiado de un
+     * motor relacional habitual en producción.
      */
     val jdbcUrl: String =
         "jdbc:h2:file:${databaseFileBase};MODE=PostgreSQL;DATABASE_TO_UPPER=false;AUTO_SERVER=TRUE"
@@ -83,6 +92,9 @@ object DemoDatabase {
 
     /**
      * Recrea la base de datos completa y vuelve a cargar los datos semilla.
+     *
+     * Cada `main` llama a este método para que el ejemplo sea repetible: el alumnado puede
+     * ejecutarlo varias veces sin depender de datos que hayan quedado de una ejecución anterior.
      */
     fun reset() {
         Files.createDirectories(databaseFileBase.parent)
@@ -105,6 +117,10 @@ object DemoDatabase {
     /**
      * Crea un `DataSource` simple sin pool.
      *
+     * `DataSource` es una abstracción estándar de JDBC. Permite que repositorios y servicios
+     * dependan de un contrato general en lugar de conocer `DriverManager` directamente, lo que
+     * encaja con inversión de dependencias y facilita sustituir la forma de obtener conexiones.
+     *
      * @return origen de datos basado en H2.
      */
     fun dataSource(): DataSource =
@@ -116,6 +132,9 @@ object DemoDatabase {
 
     /**
      * Crea un `DataSource` con HikariCP para ejemplos de pool.
+     *
+     * Un pool mantiene conexiones preparadas para reutilizarlas. En aplicaciones reales evita
+     * abrir una conexión física nueva para cada consulta, que es una operación costosa.
      *
      * @param poolName nombre visible del pool.
      * @param maxPoolSize número máximo de conexiones simultáneas.
@@ -140,6 +159,12 @@ object DemoDatabase {
         Files.deleteIfExists(Path.of(path))
     }
 
+    /**
+     * Crea el esquema relacional mínimo que comparten los ejemplos.
+     *
+     * Las claves primarias, claves foráneas y restricciones `CHECK` están aquí para mostrar que
+     * parte de la consistencia también pertenece a la base de datos, no solo al código Kotlin.
+     */
     private fun createSchema(connection: Connection) {
         connection.createStatement().use { statement ->
             statement.execute(
@@ -202,6 +227,13 @@ object DemoDatabase {
         }
     }
 
+    /**
+     * Inserta datos semilla mediante sentencias preparadas y lotes.
+     *
+     * Aunque los datos sean fijos, se usa `PreparedStatement` para mantener el mismo patrón que
+     * se aplicaría con datos externos. `addBatch` agrupa varias operaciones del mismo tipo y
+     * reduce llamadas repetidas a la base de datos.
+     */
     private fun insertSeedData(connection: Connection) {
         connection.prepareStatement(
             "INSERT INTO categorias (id, nombre) VALUES (?, ?)"
