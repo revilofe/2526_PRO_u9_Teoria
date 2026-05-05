@@ -6,6 +6,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `PreparedSelectParametro`.
  *
+ * Practica una consulta filtrada por precio usando un marcador `?` y asignando el parámetro con
+ * `setBigDecimal`.
+ *
  * Es un `object` porque representa un lanzador singleton, no un modelo con identidad propia.
  */
 object PreparedSelectParametroSimple {
@@ -44,6 +47,9 @@ object PreparedSelectParametroSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `PreparedSelectParametro`.
+ *
+ * Aporta un objeto de criterio, un repositorio de búsqueda y una comparación explícita entre SQL
+ * concatenado inseguro y `PreparedStatement` parametrizado.
  *
  * El singleton contiene solo la composición de objetos necesaria para ejecutar el ejemplo.
  */

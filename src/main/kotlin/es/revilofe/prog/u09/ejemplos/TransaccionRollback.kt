@@ -6,6 +6,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `TransaccionRollback`.
  *
+ * Fuerza un fallo después de un `INSERT` para demostrar que `rollback` deshace los cambios hechos
+ * dentro de la misma conexión transaccional.
+ *
  * Se declara como `object` porque solo contiene el lanzador de una demo repetible.
  */
 object TransaccionRollbackSimple {
@@ -48,6 +51,9 @@ object TransaccionRollbackSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `TransaccionRollback`.
+ *
+ * Aporta un servicio que cuenta pedidos antes y después del intento fallido, mostrando con datos
+ * observables que la transacción no dejó cambios persistidos.
  *
  * El singleton no modela negocio; solo coordina la ejecución del caso completo.
  */

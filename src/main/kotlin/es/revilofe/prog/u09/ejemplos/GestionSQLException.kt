@@ -6,6 +6,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `GestionSQLException`.
  *
+ * Provoca una restricción de email duplicado para observar una `SQLException`, su `SQLState` y el
+ * mensaje técnico que devuelve el driver.
+ *
  * El `object` es un singleton lanzable para agrupar el `main` del ejemplo simple.
  */
 object GestionSQLExceptionSimple {
@@ -39,6 +42,9 @@ object GestionSQLExceptionSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `GestionSQLException`.
+ *
+ * Aporta una capa de servicio que valida datos y traduce la excepción SQL a una excepción de
+ * dominio, conservando la causa original para diagnóstico.
  *
  * El singleton permite ejecutar la demo sin crear una clase auxiliar instanciable.
  */

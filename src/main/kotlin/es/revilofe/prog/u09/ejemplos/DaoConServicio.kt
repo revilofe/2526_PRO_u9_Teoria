@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `DaoConServicio`.
  *
+ * Muestra un servicio de aplicación que recibe directamente un DAO JDBC para obtener correos de
+ * clientes.
+ *
  * Se usa `object` como singleton lanzable porque no hay estado que instanciar.
  */
 object DaoConServicioSimple {
@@ -27,6 +30,9 @@ object DaoConServicioSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `DaoConServicio`.
+ *
+ * Aporta una factoría de DAOs para desacoplar la creación de implementaciones JDBC y dejar al
+ * servicio dependiente solo de contratos.
  *
  * El singleton contiene la composición de factoría, DAO y servicio.
  */

@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `UpdateBasico`.
  *
+ * Practica una actualización sencilla de stock con parámetros y revisión del número de filas
+ * afectadas por `executeUpdate`.
+ *
  * El `object` se usa como singleton lanzable para no crear objetos sin estado real.
  */
 object UpdateBasicoSimple {
@@ -32,6 +35,9 @@ object UpdateBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `UpdateBasico`.
+ *
+ * Aporta un servicio que valida el nuevo stock, comprueba que exista exactamente una fila
+ * modificada y devuelve el producto actualizado desde un repositorio.
  *
  * El singleton agrupa únicamente la ejecución de la demo.
  */

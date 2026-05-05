@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `DeleteBasico`.
  *
+ * Muestra cómo crear un registro temporal y borrarlo después con una sentencia `DELETE`
+ * parametrizada.
+ *
  * Se declara como `object` porque es un lanzador singleton sin estado propio.
  */
 object DeleteBasicoSimple {
@@ -43,6 +46,9 @@ object DeleteBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `DeleteBasico`.
+ *
+ * Aporta un servicio de borrado que comprueba el resultado de `executeUpdate` y un repositorio
+ * que separa creación temporal, borrado y lectura de verificación.
  *
  * El `object` solo coordina la ejecución de servicio y repositorio.
  */

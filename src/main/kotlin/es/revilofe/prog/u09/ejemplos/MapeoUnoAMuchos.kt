@@ -6,6 +6,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `MapeoUnoAMuchos`.
  *
+ * Muestra cómo una relación cliente-pedidos aparece como varias filas tras un `JOIN`, repitiendo
+ * los datos del cliente por cada pedido.
+ *
  * Es un `object` porque solo contiene el lanzador del caso simple.
  */
 object MapeoUnoAMuchosSimple {
@@ -50,6 +53,9 @@ object MapeoUnoAMuchosSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `MapeoUnoAMuchos`.
+ *
+ * Aporta la reconstrucción de un agregado `CustomerWithOrders`: crea el cliente una vez, acumula
+ * pedidos y contempla clientes sin pedidos mediante `LEFT JOIN`.
  *
  * El singleton solo arranca la demo y no conserva estado entre ejecuciones.
  */

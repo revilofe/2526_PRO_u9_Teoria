@@ -6,6 +6,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `InsertBasico`.
  *
+ * Muestra una inserción directa con `PreparedStatement`, asignando cada columna mediante
+ * parámetros y comprobando las filas insertadas.
+ *
  * Se usa `object` como lanzador único y sin estado.
  */
 object InsertBasicoSimple {
@@ -40,6 +43,9 @@ object InsertBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `InsertBasico`.
+ *
+ * Aporta un servicio con validaciones de negocio, un repositorio de escritura y una lectura
+ * posterior para devolver el producto insertado como vista completa.
  *
  * El `object` solo compone servicio y repositorio para la demostración.
  */

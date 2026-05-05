@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `SelectBasico`.
  *
+ * Practica una consulta `SELECT` básica con `PreparedStatement`, recorrido de `ResultSet` y
+ * escritura directa por consola.
+ *
  * Se declara como `object` para representar un único lanzador sin estado. Es una forma cómoda
  * de agrupar un `main` didáctico sin diseñar una clase con constructor.
  */
@@ -40,6 +43,9 @@ object SelectBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `SelectBasico`.
+ *
+ * Aporta un repositorio que concentra el SQL y devuelve objetos `ProductView`, separando la
+ * lectura de datos de la presentación por consola.
  *
  * El `object` funciona como singleton lanzador y no como entidad del dominio.
  */

@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `CierreRecursosUse`.
  *
+ * Practica el cierre seguro de `Connection`, `PreparedStatement` y `ResultSet` mediante llamadas
+ * anidadas a `use`.
+ *
  * Se usa `object` como singleton porque este lanzador no necesita estado ni constructor.
  */
 object CierreRecursosUseSimple {
@@ -36,6 +39,9 @@ object CierreRecursosUseSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `CierreRecursosUse`.
+ *
+ * Aporta un lector reutilizable que encapsula el patrón de cierre automático y devuelve una lista
+ * de nombres, dejando el `main` como una capa de presentación mínima.
  *
  * El `object` contiene solo la composición mínima para arrancar la versión completa.
  */

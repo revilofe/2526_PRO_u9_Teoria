@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `MapeoFilaAObjeto`.
  *
+ * Muestra el paso manual de una fila de `ResultSet` a un objeto `ProductView` después de un
+ * `JOIN` entre productos y categorías.
+ *
  * El `object` funciona como singleton lanzador; no representa un producto ni otro concepto del
  * dominio.
  */
@@ -52,6 +55,9 @@ object MapeoFilaAObjetoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `MapeoFilaAObjeto`.
+ *
+ * Aporta un `ProductRowMapper` reutilizable y un repositorio que delega el mapeo, reduciendo la
+ * duplicación cuando varias consultas devuelven la misma forma de datos.
  *
  * Se usa `object` para contener el `main` y la composición del ejemplo.
  */

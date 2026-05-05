@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `ConexionValida`.
  *
+ * Muestra cómo abrir una conexión JDBC directa, comprobar que responde con `isValid` y ver la
+ * URL usada por la base de datos de demostración.
+ *
  * Es un `object` porque solo actúa como lanzador del ejemplo. Kotlin lo compila como singleton,
  * evitando crear una clase instanciable sin estado.
  */
@@ -30,6 +33,9 @@ object ConexionValidaSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `ConexionValida`.
+ *
+ * Aporta una pequeña clase de servicio que encapsula la comprobación de salud y devuelve un
+ * informe, en lugar de mezclar toda la lógica en el `main` simple.
  *
  * Es un singleton lanzable: no guarda estado propio y solo coordina los objetos del ejemplo.
  */

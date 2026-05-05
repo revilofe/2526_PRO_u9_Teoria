@@ -5,6 +5,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `DaoBasico`.
  *
+ * Muestra el uso mínimo de un DAO: el `main` crea una implementación JDBC y consulta clientes a
+ * través de la interfaz.
+ *
  * Es un `object` porque solo contiene un `main` de demostración y no necesita instancias.
  */
 object DaoBasicoSimple {
@@ -26,6 +29,9 @@ object DaoBasicoSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `DaoBasico`.
+ *
+ * Aporta un servicio de consulta que depende del contrato DAO, separando el caso de uso de la
+ * implementación JDBC concreta.
  *
  * El singleton compone DAO y servicio para mostrar la separación de capas.
  */

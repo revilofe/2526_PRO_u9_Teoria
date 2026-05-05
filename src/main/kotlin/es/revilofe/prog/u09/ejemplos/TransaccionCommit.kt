@@ -6,6 +6,9 @@ import javax.sql.DataSource
 /**
  * Ejecuta la versión simple del ejemplo `TransaccionCommit`.
  *
+ * Muestra cómo agrupar la creación de un pedido y el descuento de stock en una transacción manual
+ * que confirma los cambios con `commit`.
+ *
  * El `object` actúa como singleton lanzador y mantiene el ejemplo sin estado compartido.
  */
 object TransaccionCommitSimple {
@@ -73,6 +76,9 @@ object TransaccionCommitSimple {
 
 /**
  * Ejecuta la versión completa del ejemplo `TransaccionCommit`.
+ *
+ * Aporta un servicio transaccional que concentra la unidad de trabajo y oculta al `main` los
+ * detalles de `autoCommit`, `commit`, `rollback` y sentencias JDBC.
  *
  * El singleton solo arranca el servicio transaccional de la demostración.
  */
